@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
 	"path"
@@ -93,11 +92,10 @@ func (c *Collection) Download(client *resty.Client, destination string) error {
 
 		_, err := grab.Get(directory, link)
 		if err != nil {
-			log.Fatal(err)
+			slog.Error("error downloading collection", "namespace", c.Namespace, "collection", c.Collection, "error", err)
 		}
 		fmt.Printf(" - v%s: %s from %s\n", version.Version, color.GreenString("downloaded"), link)
 	}
 
 	return nil
-
 }
