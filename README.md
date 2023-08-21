@@ -8,7 +8,7 @@ Requires Go 1.21+; it can be build by running `make` in the project's root direc
 
 ## Usage
 
-To download a set of collections as listed in an input JSON file (`input.json`) to directory a specified directory (`./output`):
+To download a set of collections as listed in an input JSON file (`input.json`) to a specified directory (`./output`):
 
 ```bash
 $> ./ansible-galaxy-grabber --collections=@input.json --directory=./output
