@@ -2,7 +2,7 @@
 
 A simple CLI tool to download Ansible Galaxy Collections and store them for offline/airgapped use.
 
-# Build
+## Build
 
 Requires Go 1.21+; it can be build by running `make` in the project's root directory.
 
