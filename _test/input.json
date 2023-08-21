@@ -1,0 +1,12 @@
+[
+    {
+        "namespace": "crivetimihai",
+        "collection": "virtualization",
+        "constraint": ">= 1.0.17, < 1.0.24, != 1.0.20"
+    },
+    {
+        "namespace": "crivetimihai",
+        "collection": "development",
+        "constraint": "= 1.0.1"
+    }
+]
