@@ -1,10 +1,10 @@
 # Ansible Galaxy collections grabber
 
-A simple CLI tool to download Ansible Galaxy Collections and store them for offline/airgapped use.
+A simple CLI tool to download Ansible Galaxy Collections locally for offline/airgapped use.
 
 ## Build
 
-Requires Go 1.21+; it can be built by running `make` in the project's root directory.
+The `go.mod` file requires Go 1.21+ but there are no specific requirements on the latest compiler version; it can be built by running `make` in the project's root directory.
 
 ## Usage
 
@@ -14,9 +14,10 @@ To download a set of collections as listed in an input JSON file (`input.json`) 
 $> ./ansible-galaxy-grabber --collections=@input.json --directory=./output
 ```
 
-The input file can be in either JSON or YAML format and should specify the name of the namespace and the collection; it can optionally provide one (or more, comma separated) constraints of the verison of the collection, as per https://blog.gopheracademy.com/advent-2015/semver/
+The input file can be in either JSON or YAML format and should specify the namespace and the name of the collections to download.
+It can optionally provide one or more comma-separated constraints on the versions of the collection; when povided, the constraints are used to filter out versions that should not be downloaded; the version criteria can be specified as per https://blog.gopheracademy.com/advent-2015/semver/
 
-A sample JSON file is as follows:
+An example JSON file is as follows:
 ```json
 [
     {
@@ -32,7 +33,7 @@ A sample JSON file is as follows:
 ]
 ```
 
-and the corresponding YAML:
+The same example in YAML format:
 
 ```yaml
 ---
@@ -44,6 +45,7 @@ and the corresponding YAML:
   constraint: "= 1.0.1"
 ```
 
-NOTE: the input JSON and YAML file can be either provided as a file on disk (in which case you need to provide the path prefixed with `@`, as shown in the example above) or be passed inline. When passing an inline YAML, make sure that it starts with `---` or the command line parser won't be able to autodetect the encoding.
+NOTE: the input JSON and YAML file can be either provided as a file on disk (in which case you need to provide the path prefixed with `@`, as shown in the example above) or be passed inline. 
+When passing an inline YAML, make sure that it starts with `---` (as in the example above) or the command line parser won't be able to autodetect the encoding.
 
 
