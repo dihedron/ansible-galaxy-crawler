@@ -12,6 +12,7 @@ import (
 	"github.com/dihedron/rawdata"
 	"github.com/fatih/color"
 	"github.com/go-resty/resty/v2"
+	"github.com/mattn/go-isatty"
 )
 
 type Collections struct {
@@ -74,7 +75,11 @@ func (c *Collection) Download(client *resty.Client, destination string) error {
 		}
 	}
 
-	fmt.Printf("collection %s - %s (output: %s):\n", color.HiMagentaString(c.Namespace), color.HiMagentaString(c.Collection), directory)
+	if isatty.IsTerminal(os.Stdout.Fd()) {
+		fmt.Printf("collection %s - %s (output: %s):\n", color.HiMagentaString(c.Namespace), color.HiMagentaString(c.Collection), directory)
+	} else {
+		fmt.Printf("collection %s - %s (output: %s):\n", c.Namespace, c.Collection, directory)
+	}
 
 	for _, version := range result.Data.Collection.AllVersions {
 		link := fmt.Sprintf("https://galaxy.ansible.com%s", version.DownloadURL)
@@ -85,7 +90,11 @@ func (c *Collection) Download(client *resty.Client, destination string) error {
 				return err
 			}
 			if !filter.Check(v) {
-				fmt.Printf(" - v%s: %s\n", version.Version, color.YellowString("skipped"))
+				if isatty.IsTerminal(os.Stdout.Fd()) {
+					fmt.Printf(" - v%s: %s\n", version.Version, color.YellowString("skipped"))
+				} else {
+					fmt.Printf(" - v%s: %s\n", version.Version, "skipped")
+				}
 				continue
 			}
 		}
@@ -94,7 +103,11 @@ func (c *Collection) Download(client *resty.Client, destination string) error {
 		if err != nil {
 			slog.Error("error downloading collection", "namespace", c.Namespace, "collection", c.Collection, "error", err)
 		}
-		fmt.Printf(" - v%s: %s from %s\n", version.Version, color.GreenString("downloaded"), link)
+		if isatty.IsTerminal(os.Stdout.Fd()) {
+			fmt.Printf(" - v%s: %s from %s\n", version.Version, color.GreenString("downloaded"), link)
+		} else {
+			fmt.Printf(" - v%s: %s from %s\n", version.Version, "downloaded", link)
+		}
 	}
 
 	return nil
