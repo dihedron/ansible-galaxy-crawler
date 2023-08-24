@@ -91,22 +91,28 @@ func (c *Collection) Download(client *resty.Client, destination string) error {
 			}
 			if !filter.Check(v) {
 				if isatty.IsTerminal(os.Stdout.Fd()) {
-					fmt.Printf(" - v%s: %s\n", version.Version, color.YellowString("skipped"))
+					fmt.Printf(" - v%s: %s [URL: %s]\n", version.Version, color.YellowString("skipped"), link)
 				} else {
-					fmt.Printf(" - v%s: %s\n", version.Version, "skipped")
+					fmt.Printf(" - v%s: skipped [URL: %s]\n", version.Version, link)
 				}
 				continue
 			}
 		}
 
-		_, err := grab.Get(directory, link)
+		response, err := grab.Get(directory, link)
 		if err != nil {
 			slog.Error("error downloading collection", "namespace", c.Namespace, "collection", c.Collection, "error", err)
+			if isatty.IsTerminal(os.Stdout.Fd()) {
+				fmt.Printf(" - v%s: %s [URL: %s, error: %v]\n", version.Version, color.RedString("failed"), link, err)
+			} else {
+				fmt.Printf(" - v%s: failed [URL: %s, bytes: %d, duration: %s]\n", version.Version, link, response.Size(), response.Duration())
+			}
+			continue
 		}
 		if isatty.IsTerminal(os.Stdout.Fd()) {
-			fmt.Printf(" - v%s: %s from %s\n", version.Version, color.GreenString("downloaded"), link)
+			fmt.Printf(" - v%s: %s [URL: %s, bytes: %d, duration: %s]\n", version.Version, color.GreenString("success"), link, response.Size(), response.Duration())
 		} else {
-			fmt.Printf(" - v%s: %s from %s\n", version.Version, "downloaded", link)
+			fmt.Printf(" - v%s: success [URL: %s, bytes: %d, duration: %s]\n", version.Version, link, response.Size(), response.Duration())
 		}
 	}
 

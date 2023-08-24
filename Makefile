@@ -3,5 +3,9 @@ build:
 	@go build
 
 .PHONY: test
-test: build
-	@rm -rf _test/download && ./ansible-galaxy-grabber --collections=@_test/input.json --directory=_test/download
+test: reset build
+	@./ansible-galaxy-grabber --collections=@_test/input.json --directory=_test/download
+
+.PHONY: reset
+reset:
+	@rm -rf _test/download
